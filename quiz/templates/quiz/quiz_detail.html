@@ -1,0 +1,102 @@
+{% load static %} <!-- Загружаем тег static для работы с файлами, находящимися в директории static (например, CSS или изображения) -->
+
+<!DOCTYPE html>
+<html lang="en"> <!-- Определение языка документа и начало HTML-документа -->
+<head>
+    <meta charset="UTF-8"> <!-- Устанавливаем кодировку документа на UTF-8, поддерживающую все символы -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Устанавливаем параметры для адаптивного дизайна (поддержка мобильных устройств) -->
+    <title>{{ quiz.title }}</title> <!-- Заголовок страницы отображает название теста, переданное в переменной `quiz.title` -->
+    
+    <!-- Подключение CSS-файла, расположенного в статической директории. Этот файл задает стили для страницы -->
+    <link rel="stylesheet" href="{% static 'css/detail.css' %}">
+</head>
+<body>
+    <div class="container"> <!-- Основной контейнер для всего содержимого страницы -->
+
+        <header> <!-- Шапка страницы с информацией о тесте -->
+            <h1>{{ quiz.title }}</h1> <!-- Отображение названия теста -->
+            <p>{{ quiz.description }}</p> <!-- Отображение описания теста -->
+        </header>
+
+        <!-- Форма для отправки ответов, которая отправляет данные на сервер для проверки результатов -->
+        <form method="post" action="{% url 'check_results' quiz.id %}" onsubmit="return validateForm(event)">
+            {% csrf_token %} <!-- Токен для защиты от CSRF атак, обязательный при отправке данных с помощью POST -->
+
+            <section> <!-- Раздел с вопросами -->
+                <h2>Вопросы</h2> <!-- Заголовок раздела с вопросами -->
+                <ul> <!-- Список всех вопросов теста -->
+                    {% for question in quiz.questions.all %} <!-- Цикл по всем вопросам теста -->
+                        <li class="question" data-question-id="{{ question.id }}"> <!-- Каждый вопрос будет представлен как элемент списка -->
+                            <h3>{{ question.question_text }}</h3> <!-- Отображение текста вопроса -->
+
+                            <ul> <!-- Список ответов на вопрос -->
+                                {% if question.answers.count > 0 %} <!-- Проверка, есть ли у вопроса ответы -->
+                                    {% for answer in question.answers.all %} <!-- Цикл по всем возможным ответам на вопрос -->
+                                        <li> <!-- Каждый вариант ответа -->
+                                            <label>
+                                                {% if question.is_multiple_choice %} <!-- Если вопрос многовариантный (можно выбрать несколько ответов) -->
+                                                    <input type="checkbox" name="question_{{ question.id }}[]" value="{{ answer.id }}"> <!-- Чекбокс для множественного выбора -->
+                                                {% else %} <!-- Если вопрос с одиночным выбором -->
+                                                    <input type="radio" name="question_{{ question.id }}" value="{{ answer.id }}"> <!-- Радиокнопка для одиночного выбора -->
+                                                {% endif %}
+                                                {{ answer.answer_text }} <!-- Отображение текста ответа -->
+                                            </label>
+                                        </li>
+                                    {% endfor %}
+                                {% else %} <!-- Если у вопроса нет ответов -->
+                                    <p>Нет ответов на этот вопрос</p> <!-- Сообщение о том, что для этого вопроса нет вариантов ответа -->
+                                {% endif %}
+                            </ul>
+                        </li>
+                    {% endfor %}
+                </ul>
+
+                <!-- Кнопка отправки формы для проверки результатов -->
+                <button type="submit">Проверить результаты</button>
+            </section>
+            
+        </form>
+
+        <!-- Сообщение об ошибке, если не все вопросы были ответлены -->
+        <div id="error-message" style="color: red; display: none;">
+            Пожалуйста, ответьте на все вопросы.
+        </div>
+
+        <footer> <!-- Подвал страницы с дополнительными ссылками -->
+            <a href="{% url 'quiz_list' %}">Вернуться к списку</a> <!-- Ссылка для возврата на страницу со списком тестов -->
+        </footer>
+    </div>
+
+    <!-- JavaScript для проверки того, что все вопросы были ответены перед отправкой формы -->
+    <script>
+    function validateForm(event) {
+        let isValid = true; // Флаг, указывающий, были ли все вопросы отвечены 
+        let questions = document.querySelectorAll('.question'); // Сбор всех вопросов на странице
+        let errorMessage = document.getElementById('error-message'); // Элемент для отображения сообщения об ошибке 
+        errorMessage.style.display = 'none'; // Скрытие сообщения об ошибке при начале проверки 
+
+        questions.forEach(function(question) {
+            let questionId = question.getAttribute('data-question-id'); // Получаем ID вопроса
+            
+            let selectedRadioAnswer = document.querySelector('input[name="question_' + questionId + '"]:checked'); // Находим выбранный радиобаттон для одиночного выбора
+            
+            let selectedCheckboxAnswers = document.querySelectorAll('input[name="question_' + questionId + '[]"]:checked'); // Находим все выбранные чекбоксы для множественного выбора 
+
+            if (!(selectedRadioAnswer || selectedCheckboxAnswers.length > 0)) { // Если не выбраны ни радиокнопки, ни чекбоксы 
+                isValid = false; // Флаг ошибки
+                question.classList.add('error'); // Добавление класса 'error' для выделения вопросов, на которые не ответили 
+            } else {
+                question.classList.remove('error'); // Удаление класса 'error', если вопрос был правильно отвечен 
+            }
+        });
+
+        if (!isValid) {
+            event.preventDefault(); // Прекращаем отправку формы, если не все вопросы отвечены 
+            errorMessage.style.display = 'block'; // Показываем сообщение об ошибке 
+        }
+
+        return isValid; // Возвращаем флаг, который указывает, были ли все вопросы отвечены
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+{% load static %} <!-- Загружает поддержку работы с статическими файлами (CSS, изображения и т. д.) -->
+
+<!DOCTYPE html>
+<html lang="en"> <!-- Устанавливаем язык документа как английский -->
+<head>
+    <meta charset="UTF-8"> <!-- Устанавливаем кодировку документа на UTF-8 для поддержки всех символов -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Настройка для адаптивного дизайна (поддержка мобильных устройств) -->
+    <link rel="stylesheet" href="{% static 'css/home.css' %}"> <!-- Подключаем файл CSS для стилизации страницы, расположенный в директории static -->
+    <title>{% if user.is_authenticated %} Меню {% else %} Вход/регистрация {% endif %} </title> <!-- Заголовок страницы, отображаемый в браузере -->
+</head>
+<body>
+    <div class="container"> <!-- Основной контейнер, содержащий весь контент страницы -->
+        
+        <h1>
+            {% if user.is_authenticated %}
+                Меню
+            {% else %}
+                Вход/регистрация
+            {% endif %}
+        </h1>
+        
+
+        <!-- Отображение сообщений, если они есть -->
+        {% if messages %} 
+            <ul class="messages"> <!-- Список сообщений -->
+                {% for message in messages %} <!-- Цикл по всем сообщениям -->
+                    <li class="{{ message.tags }}">{{ message }}</li> <!-- Отображение сообщения с соответствующими тегами (например, 'error', 'success') -->
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <!-- Проверка, авторизован ли пользователь -->
+        {% if user.is_authenticated %}
+            <p>Здравствуйте, {{ user.username }}!</p> <!-- Приветствие с именем пользователя -->
+
+            <!-- Проверка, является ли пользователь суперпользователем -->
+            {% if user.is_superuser %}
+                <!-- Ссылка для суперпользователя, чтобы создать новый тест -->
+                <a href="{% url 'create_quiz' %}">Создать новый тест</a>
+            {% endif %}
+
+            <!-- Ссылки для авторизованных пользователей -->
+            <a href="{% url 'quiz_list' %}">Список тестов</a> <!-- Ссылка на страницу со списком тестов -->
+            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Выйти</a> <!-- Ссылка для выхода с сайта -->
+            <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;"> <!-- Форма для выхода -->
+                {% csrf_token %} <!-- Защита от CSRF атак -->
+            </form>
+        {% else %}
+            <!-- Если пользователь не авторизован, показываем форму входа или регистрации -->
+            <div id="auth-forms">
+                <!-- Форма для входа -->
+                <div id="login-form" style="display: block;">
+                    <h2>Вход</h2> <!-- Заголовок формы входа -->
+                    <form method="POST"> <!-- Форма с методом POST для отправки данных на сервер -->
+                        {% csrf_token %} <!-- Защита от CSRF атак -->
+                        <label for="username">Логин:</label>
+                        <input type="text" name="username" id="username" required> <!-- Поле для ввода логина -->
+                        <br>
+                        <label for="password">Пароль:</label>
+                        <input type="password" name="password" id="password" required> <!-- Поле для ввода пароля -->
+                        <br>
+                        <button type="submit" name="login">Войти</button> <!-- Кнопка для отправки формы входа -->
+                    </form>
+                    <p>Нет аккаунта? <a href="#" id="switch-to-register">Зарегистрироваться</a></p> <!-- Ссылка для переключения на форму регистрации -->
+                </div>
+
+                <!-- Форма для регистрации -->
+                <div id="register-form" style="display: none;">
+                    <h2>Регистрация</h2> <!-- Заголовок формы регистрации -->
+                    <form method="POST"> <!-- Форма с методом POST для отправки данных на сервер -->
+                        {% csrf_token %} <!-- Защита от CSRF атак -->
+                        <label for="username">Логин:</label>
+                        <input type="text" name="username" id="username" required> <!-- Поле для ввода логина -->
+                        <br>
+                        <label for="password1">Пароль:</label>
+                        <input type="password" name="password1" id="password1" required> <!-- Поле для ввода пароля -->
+                        <br>
+                        <label for="password2">Подтвердите пароль:</label>
+                        <input type="password" name="password2" id="password2" required> <!-- Поле для подтверждения пароля -->
+                        <br>
+                        <button type="submit" name="register">Зарегистрироваться</button> <!-- Кнопка для отправки формы регистрации -->
+                    </form>
+                    <p>Уже есть аккаунт? <a href="#" id="switch-to-login">Войти</a></p> <!-- Ссылка для переключения на форму входа -->
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Скрипты для переключения между формами входа и регистрации -->
+    <script>
+        document.getElementById('switch-to-register').addEventListener('click', function(event) {
+            event.preventDefault(); // Останавливаем стандартное действие ссылки
+            document.getElementById('login-form').style.display = 'none'; // Скрываем форму входа
+            document.getElementById('register-form').style.display = 'block'; // Показываем форму регистрации
+        });
+
+        document.getElementById('switch-to-login').addEventListener('click', function(event) {
+            event.preventDefault(); // Останавливаем стандартное действие ссылки
+            document.getElementById('register-form').style.display = 'none'; // Скрываем форму регистрации
+            document.getElementById('login-form').style.display = 'block'; // Показываем форму входа
+        });
+    </script>
+</body>
+</html>

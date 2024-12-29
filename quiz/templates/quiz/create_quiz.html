@@ -1,0 +1,157 @@
+{% load static %} <!-- Загружает поддержку статических файлов (CSS, изображения) -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"> <!-- Устанавливает кодировку страницы -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Адаптивность для мобильных устройств -->
+    <title>Создать тест</title> <!-- Заголовок страницы -->
+    <link rel="stylesheet" href="{% static 'css/create_quiz.css' %}"> <!-- Подключает CSS файл для стилизации -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Подключает библиотеку jQuery -->
+</head>
+<body>
+    <h1>Создать тест</h1>
+    <form method="post" onsubmit="return validateForm()"> <!-- Форма для создания теста -->
+        {% csrf_token %} <!-- Защита от CSRF атак -->
+        <label for="title">Название теста:</label>
+        <input type="text" name="title" id="title" required><br> <!-- Ввод названия теста -->
+    
+        <label for="description">Описание теста:</label>
+        <textarea name="description" id="description"></textarea><br> <!-- Ввод описания теста -->
+    
+        <div id="questions">
+            <h3>Вопросы:</h3>
+            <div class="question" data-question-index="0"> <!-- Блок для первого вопроса -->
+                <input type="text" name="question_text_0" placeholder="Текст вопроса" required> <!-- Ввод текста вопроса -->
+                <select name="is_multiple_choice_0" required> <!-- Выбор типа вопроса (Один или Множественный ответ) -->
+                    <option value="single">Один ответ</option>
+                    <option value="multiple">Множественный выбор</option>
+                </select>
+                <div class="answers" data-answer-index="0"> <!-- Блок для вариантов ответов -->
+                    <div class="answer" data-answer-index="0">
+                        <input type="text" name="answer_text_0_0" placeholder="Ответ 1" required> <!-- Ввод текста ответа -->
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="is_correct_0_0"> Правильный ответ <!-- Выбор правильного ответа -->
+                        </label>
+                        <button type="button" class="remove-answer">Удалить ответ</button> <!-- Кнопка удаления ответа -->
+                    </div>
+                </div>
+                <button type="button" class="add-answer">Добавить ответ</button> <!-- Кнопка добавления нового ответа -->
+                <button type="button" class="remove-question">Удалить вопрос</button> <!-- Кнопка удаления вопроса -->
+            </div>
+        </div>
+        <button type="button" id="add-question">Добавить вопрос</button><br> <!-- Кнопка добавления нового вопроса -->
+        <button type="submit">Сохранить тест</button> <!-- Кнопка сохранения теста -->
+        <button type="button" onclick="window.location.href='/'">На главную</button> <!-- Кнопка возврата на главную страницу -->
+    </form>
+
+    <div id="error-message" style="color: red; display: none;">
+        Пожалуйста, выберите хотя бы один правильный ответ для каждого вопроса.
+    </div> <!-- Сообщение об ошибке, если не выбран правильный ответ -->
+
+    <script>
+        $(document).ready(function () {
+        let questionIndex = 0; // Индекс для новых вопросов
+
+        // Обработчик клика по кнопке "Добавить вопрос"
+        $('#add-question').click(function () {
+            questionIndex++; // Увеличиваем индекс нового вопроса
+            const questionHtml = `
+                <div class="question" data-question-index="${questionIndex}">
+                    <input type="text" name="question_text_${questionIndex}" placeholder="Текст вопроса" required>
+                    <select name="is_multiple_choice_${questionIndex}" required>
+                        <option value="single">Один ответ</option>
+                        <option value="multiple">Множественный выбор</option>
+                    </select>
+                    <div class="answers" data-answer-index="0">
+                        <div class="answer" data-answer-index="0">
+                            <input type="text" name="answer_text_${questionIndex}_0" placeholder="Ответ 1" required>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="is_correct_${questionIndex}_0"> Правильный ответ
+                            </label>
+                            <button type="button" class="remove-answer">Удалить ответ</button>
+                        </div>
+                    </div>
+                    <button type="button" class="add-answer">Добавить ответ</button>
+                    <button type="button" class="remove-question">Удалить вопрос</button>
+                </div>`;
+            $('#questions').append(questionHtml); // Добавляем новый вопрос в контейнер
+        });
+
+        // Обработчик клика по кнопке "Удалить вопрос"
+        $(document).on('click', '.remove-question', function () {
+            $(this).closest('.question').remove(); // Удаляем текущий вопрос
+        });
+
+        // Обработчик клика по кнопке "Добавить ответ"
+        $(document).on('click', '.add-answer', function () {
+            const question = $(this).closest('.question'); // Находим родительский элемент вопроса
+            const questionIndex = question.data('question-index'); // Получаем индекс вопроса
+            let answerIndex = question.find('.answers').data('answer-index'); // Получаем индекс ответа
+            answerIndex++; // Увеличиваем индекс нового ответа
+            question.find('.answers').data('answer-index', answerIndex); // Обновляем индекс ответов
+
+            // Создаем HTML для нового ответа
+            const newAnswerHtml = `
+                <div class="answer" data-answer-index="${answerIndex}">
+                    <input type="text" name="answer_text_${questionIndex}_${answerIndex}" placeholder="Ответ ${answerIndex + 1}" required>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="is_correct_${questionIndex}_${answerIndex}"> Правильный ответ
+                    </label>
+                    <button type="button" class="remove-answer">Удалить ответ</button>
+                </div>`;
+            question.find('.answers').append(newAnswerHtml); // Добавляем новый ответ в вопрос
+        });
+
+        // Обработчик клика по кнопке "Удалить ответ"
+        $(document).on('click', '.remove-answer', function () {
+            $(this).closest('.answer').remove(); // Удаляем текущий ответ
+        });
+
+        // Функция для валидации формы перед отправкой
+        function validateForm() {
+            let isValid = true; // Флаг для отслеживания валидности формы
+            $('#error-message').hide(); // Скрываем сообщение об ошибке
+
+            // Перебираем все вопросы в форме
+            $('.question').each(function () {
+                const correctAnswers = $(this).find('.answer input[type="checkbox"]:checked'); // Получаем выбранные правильные ответы
+                const answersCount = $(this).find('.answer').length; // Количество вариантов ответов
+                const questionType = $(this).find('select').val(); // Получаем тип вопроса (один ответ или множественный выбор)
+
+                // Проверка, что у вопроса есть хотя бы один ответ
+                if (answersCount === 0) {
+                    alert('Каждый вопрос должен иметь хотя бы один ответ.');
+                    isValid = false;
+                    return false; // Прерываем выполнение
+                }
+
+                // Проверка для вопроса с одним правильным ответом
+                if (questionType === 'single' && correctAnswers.length !== 1) {
+                    alert('Для вопросов с типом "Один ответ" должен быть выбран только один правильный ответ.');
+                    isValid = false;
+                    return false; // Прерываем выполнение
+                }
+
+                // Проверка, что выбран хотя бы один правильный ответ
+                if (correctAnswers.length === 0) {
+                    alert('Пожалуйста, выберите хотя бы один правильный ответ для каждого вопроса.');
+                    isValid = false;
+                    return false; // Прерываем выполнение
+                }
+            });
+
+            return isValid; // Возвращаем результат валидации
+        }
+
+        // Обработчик отправки формы
+        $('form').on('submit', function (event) {
+            if (!validateForm()) { // Если форма не прошла валидацию
+                event.preventDefault(); // Отменяем отправку формы
+            }
+        });
+    });
+
+    </script>
+</body>
+</html>

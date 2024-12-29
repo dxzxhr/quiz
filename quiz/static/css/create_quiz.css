@@ -1,0 +1,156 @@
+body {
+    font-family: 'Arial', sans-serif; /* Шрифт Arial для всей страницы */
+    background-color: #f9f9f9; /* Светло-серый фон страницы */
+    color: #333; /* Темно-серый цвет текста */
+    margin: 0; /* Убирает отступы вокруг страницы */
+    padding: 0; /* Убирает внутренние отступы */
+}
+
+h1 {
+    text-align: center; /* Центрирует заголовок */
+    margin-top: 20px; /* Отступ сверху */
+    font-size: 1.8rem; /* Размер шрифта для заголовка */
+    font-weight: 500; /* Полужирный шрифт */
+    color: #000; /* Черный цвет для заголовка */
+}
+
+form {
+    max-width: 600px; /* Максимальная ширина формы */
+    margin: 20px auto; /* Центрирует форму по горизонтали с отступами сверху и снизу */
+    padding: 20px; /* Внутренние отступы */
+    background-color: #fff; /* Белый фон формы */
+    border-radius: 8px; /* Закругленные углы */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Тень вокруг формы */
+}
+
+label {
+    font-size: 1rem; /* Размер шрифта для меток */
+    font-weight: 500; /* Полужирный шрифт */
+    margin-bottom: 8px; /* Отступ снизу */
+    display: block; /* Метки занимают всю строку */
+}
+
+.checkbox-label {
+    display: flex; /* Используется для выравнивания элементов по горизонтали */
+    align-items: center; /* Выравнивание по вертикали */
+    font-size: 1rem; /* Размер шрифта */
+    color: #333; /* Темно-серый цвет текста */
+}
+
+.checkbox-label input[type="checkbox"] {
+    margin-right: 8px; /* Отступ справа для чекбокса */
+}
+
+input[type="text"], textarea, select {
+    width: 100%; /* Ширина элементов — 100% контейнера */
+    padding: 10px; /* Внутренние отступы */
+    margin-bottom: 16px; /* Отступ снизу */
+    font-size: 1rem; /* Размер шрифта */
+    border: 1px solid #ccc; /* Светло-серая граница */
+    border-radius: 4px; /* Закругленные углы */
+    box-sizing: border-box; /* Учитывает отступы и границы в общей ширине */
+    background-color: #f9f9f9; /* Светло-серый фон */
+    color: #333; /* Темно-серый цвет текста */
+}
+
+input[type="text"]:focus, textarea:focus, select:focus {
+    border-color: #666; /* Изменяет цвет границы на серый при фокусе */
+    outline: none; /* Убирает стандартную обводку при фокусе */
+}
+
+textarea {
+    resize: vertical; /* Разрешает изменение размера только по вертикали */
+    min-height: 80px; /* Минимальная высота текстового поля */
+}
+
+button {
+    display: inline-block; /* Делает кнопку блочным элементом, но сохраняет возможность располагать её в одну строку */
+    padding: 10px 20px; /* Внутренние отступы */
+    font-size: 1rem; /* Размер шрифта */
+    border: 1px solid #666; /* Серая граница */
+    border-radius: 4px; /* Закругленные углы */
+    background-color: #fff; /* Белый фон */
+    color: #333; /* Темно-серый цвет текста */
+    cursor: pointer; /* Курсор в виде руки при наведении */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Плавное изменение фона и текста при наведении */
+}
+
+button:hover {
+    background-color: #333; /* Темный фон при наведении */
+    color: #fff; /* Белый текст */
+}
+
+#add-question {
+    margin: 20px 0; /* Отступы сверху и снизу для кнопки добавления вопроса */
+    width: 100%; /* Кнопка занимает всю ширину */
+}
+
+.question {
+    margin-bottom: 20px; /* Отступ снизу для блока с вопросом */
+    padding: 15px; /* Внутренние отступы */
+    border: 1px solid #ddd; /* Светло-серая граница */
+    border-radius: 6px; /* Закругленные углы */
+    background-color: #fdfdfd; /* Светлый фон */
+}
+
+.answers {
+    margin-top: 10px; /* Отступ сверху для блока с ответами */
+}
+
+.answer {
+    display: flex; /* Используется для выравнивания элементов по горизонтали */
+    align-items: center; /* Вертикальное выравнивание */
+    justify-content: space-between; /* Равномерное распределение между элементами */
+    gap: 15px; /* Промежуток между элементами */
+    margin-bottom: 8px; /* Отступ снизу */
+}
+
+.answer input[type="text"] {
+    flex-grow: 1; /* Разрешает текстовому полю расти, заполняя доступное пространство */
+    margin-right: 10px; /* Отступ справа */
+}
+
+.answer button {
+    padding: 6px 12px; /* Внутренние отступы */
+    font-size: 0.9rem; /* Размер шрифта */
+    border-radius: 4px; /* Закругленные углы */
+    background-color: transparent; /* Прозрачный фон */
+    color: #000000; /* Черный цвет текста */
+    border: 2px solid #000; /* Черная граница */
+    cursor: pointer; /* Курсор в виде руки при наведении */
+    transition: background-color 0.3s ease, transform 0.2s; /* Плавные изменения при наведении */
+}
+
+.answer button:hover {
+    background-color: #333; /* Темный фон при наведении */
+    color: #fff; /* Белый текст */
+}
+
+button.remove-question {
+    width: 100%; /* Кнопка удаления занимает всю ширину */
+    text-align: center; /* Текст по центру */
+    margin-top: 10px; /* Отступ сверху */
+}
+
+#questions {
+    margin-top: 20px; /* Отступ сверху для блока вопросов */
+}
+
+@media (max-width: 768px) {
+    form {
+        width: 90%; /* Уменьшаем ширину формы на мобильных устройствах */
+        padding: 15px; /* Уменьшаем отступы внутри формы */
+    }
+
+    h1 {
+        font-size: 1.5rem; /* Уменьшаем размер шрифта для заголовка */
+    }
+
+    button {
+        font-size: 0.9rem; /* Уменьшаем размер шрифта кнопок */
+    }
+
+    input[type="text"], textarea, select {
+        font-size: 0.9rem; /* Уменьшаем размер шрифта для полей ввода */
+    }
+}

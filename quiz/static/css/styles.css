@@ -1,0 +1,148 @@
+body {
+    font-family: Arial, sans-serif; /* Устанавливает шрифт для текста */
+    background-color: #f8f8f8; /* Цвет фона страницы */
+    color: #333; /* Цвет текста */
+    margin: 0; /* Убирает отступы страницы */
+    padding: 0; /* Убирает внутренние отступы страницы */
+    line-height: 1.5; /* Интерлиньяж для улучшения читаемости */
+}
+
+.container {
+    max-width: 800px; /* Ограничение ширины контейнера */
+    margin: 40px auto; /* Центрирование контейнера с отступами */
+    padding: 20px; /* Внутренний отступ внутри контейнера */
+    background-color: #fff; /* Белый фон для контейнера */
+    border-radius: 8px; /* Закругленные углы контейнера */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тень для контейнера */
+}
+
+h1 {
+    font-size: 1.8rem; /* Размер шрифта заголовка */
+    font-weight: 600; /* Жирное начертание заголовка */
+    text-align: center; /* Выравнивание заголовка по центру */
+    margin-bottom: 20px; /* Отступ снизу */
+}
+
+ul {
+    list-style: none; /* Убирает маркеры списка */
+    margin: 0; /* Убирает отступы списка */
+    padding: 0; /* Убирает внутренние отступы списка */
+}
+
+li {
+    display: flex; /* Использует Flexbox для элементов списка */
+    justify-content: space-between; /* Распределяет элементы по краям */
+    align-items: center; /* Выравнивание элементов по центру */
+    padding: 15px; /* Внутренние отступы для элементов списка */
+    border-bottom: 1px solid #e0e0e0; /* Нижняя граница элемента */
+    background-color: #fafafa; /* Цвет фона для элементов списка */
+    border-radius: 6px; /* Закругленные углы для элементов списка */
+    margin-bottom: 10px; /* Отступ снизу */
+}
+
+li:last-child {
+    border-bottom: none; /* Убирает нижнюю границу у последнего элемента */
+}
+
+.quiz-title {
+    font-size: 1rem; /* Размер шрифта заголовков тестов */
+    color: #333; /* Цвет текста */
+    text-decoration: none; /* Убирает подчеркивание */
+    transition: color 0.3s ease; /* Плавное изменение цвета при наведении */
+}
+
+.quiz-title:hover {
+    color: #000; /* Цвет текста при наведении */
+}
+
+.button-container {
+    display: flex; /* Выравнивание кнопок с помощью Flexbox */
+    align-items: center; /* Вертикальное выравнивание */
+    gap: 10px; /* Пробел между кнопками */
+}
+
+.button {
+    display: inline-flex; /* Выводит кнопку как блок с содержимым */
+    justify-content: center; /* Центрирует содержимое кнопки */
+    align-items: center; /* Выравнивает элементы по центру */
+    padding: 8px 16px; /* Внутренние отступы */
+    font-size: 0.9rem; /* Размер шрифта */
+    font-weight: 500; /* Жирность шрифта */
+    border: 1px solid #333; /* Граница кнопки */
+    background-color: transparent; /* Прозрачный фон */
+    color: #333; /* Цвет текста */
+    border-radius: 4px; /* Закругленные углы */
+    text-decoration: none; /* Убирает подчеркивание */
+    cursor: pointer; /* Курсор при наведении */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Плавное изменение фона и цвета */
+}
+
+.button:hover {
+    background-color: #333; /* Цвет фона при наведении */
+    color: #fff; /* Цвет текста при наведении */
+}
+
+.delete-button {
+    border: 1px solid #333; /* Граница кнопки удаления */
+    color: #333; /* Цвет текста */
+    background-color: transparent; /* Прозрачный фон */
+}
+
+.delete-button:hover {
+    background-color: #f44336; /* Красный фон при наведении */
+    color: #fff; /* Белый цвет текста при наведении */
+}
+
+.create-button,
+.home-button {
+    display: block; /* Кнопки отображаются как блоки */
+    margin: 15px auto 0; /* Центрирование кнопок */
+    text-align: center; /* Выравнивание текста по центру */
+    width: 100%; /* Ширина кнопок */
+    padding: 10px; /* Внутренние отступы */
+    font-size: 1rem; /* Размер шрифта */
+    border: none; /* Убирает границу */
+    background-color: #333; /* Темный фон кнопок */
+    color: #fff; /* Белый цвет текста */
+    border-radius: 4px; /* Закругленные углы */
+    cursor: pointer; /* Курсор при наведении */
+    transition: background-color 0.3s ease; /* Плавное изменение фона */
+}
+
+.create-button:hover,
+.home-button:hover {
+    background-color: #444; /* Цвет фона при наведении */
+}
+
+.icon {
+    width: 20px; /* Ширина и высота иконки */
+    height: 20px;
+    display: block; /* Отображение как блок */
+    object-fit: cover; /* Масштабирование изображения */
+    margin: auto; /* Центрирование изображения */
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 15px; /* Уменьшение отступов на мобильных */
+    }
+
+    h1 {
+        font-size: 1.5rem; /* Уменьшение размера заголовка */
+    }
+
+    .quiz-title {
+        font-size: 0.9rem; /* Уменьшение размера шрифта заголовков тестов */
+    }
+
+    .button {
+        padding: 6px 12px; /* Уменьшение отступов для кнопок */
+        font-size: 0.8rem; /* Уменьшение шрифта */
+    }
+
+    .create-button,
+    .home-button {
+        font-size: 0.9rem; /* Уменьшение шрифта для кнопок */
+        padding: 8px; /* Уменьшение отступов для кнопок */
+    }
+}
